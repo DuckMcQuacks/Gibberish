@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract first instruction bytes and write them as sliding 2-grams."""
+"""Extract first instruction bytes and write them as sliding n-grams."""
 
 from __future__ import annotations
 

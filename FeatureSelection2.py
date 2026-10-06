@@ -12,7 +12,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_INPUT_DIR = SCRIPT_DIR / "Disassembled"
 DEFAULT_OUTPUT_DIR = SCRIPT_DIR / "OpcodeSequences"
 SEPARATOR_VALUE = " "
-LINE_BREAK_BYTES = {"EB", "FF", "E9", "74", "75", "72", "73", "77", "7C", "7D"}
+LINE_BREAK_BYTES = {"EB", "FF", "E9", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "7A", "7B", "7C", "7D", "7E", "7F"} #0F 80-8F, but I cannot determine this for sure with just the first byte
 
 
 def extract_first_opcode_bytes(input_txt: Path) -> str:

@@ -14,7 +14,7 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 GHIDRA_SCRIPT_DIR = SCRIPT_DIR / "ghidra_scripts"
-GHIDRA_HOME = Path(r"/home/vboxuser/Downloads/ghidra_12.1.4_PUBLIC")
+GHIDRA_HOME = Path(r"C:\Users\theda\Downloads\ghidra_12.1.4_PUBLIC")
 DEFAULT_INPUT_DIR = SCRIPT_DIR / "ToDisassemble"
 DEFAULT_OUTPUT_DIR = SCRIPT_DIR / "Disassembled"
 
@@ -98,7 +98,7 @@ def main() -> int:
         description="Disassemble EXE files with Ghidra and export instructions to text files."
     )
     parser.add_argument(
-        "input",
+        "--input",
         type=Path,
         nargs="?",
         default=DEFAULT_INPUT_DIR,
