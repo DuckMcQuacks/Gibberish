@@ -14,7 +14,7 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 GHIDRA_SCRIPT_DIR = SCRIPT_DIR / "ghidra_scripts"
-GHIDRA_HOME = Path(r"C:\Users\theda\Downloads\ghidra_12.1.4_PUBLIC")
+GHIDRA_HOME = Path(r"/home/vboxuser/Downloads/ghidra_12.1.4_PUBLIC")
 DEFAULT_INPUT_DIR = SCRIPT_DIR / "ToDisassemble"
 DEFAULT_OUTPUT_DIR = SCRIPT_DIR / "Disassembled"
 
@@ -22,27 +22,44 @@ DEFAULT_OUTPUT_DIR = SCRIPT_DIR / "Disassembled"
 def find_analyze_headless(ghidra_home: Path | None, explicit_path: Path | None) -> Path:
     if explicit_path is not None:
         executable = explicit_path.expanduser().resolve()
-        if executable.is_file():
-            return executable
-        raise FileNotFoundError(f"Headless analyzer not found: {executable}")
-
-    if ghidra_home is not None:
+        candidates = [executable]
+    elif ghidra_home is not None:
         home = ghidra_home.expanduser().resolve()
-        candidates = [
-            home / "support" / "analyzeHeadless.bat",
-            home / "support" / "analyzeHeadless",
-        ]
-        for candidate in candidates:
-            if candidate.is_file():
-                return candidate
+        launcher_names = (
+            ("support/analyzeHeadless.bat", "support/analyzeHeadless")
+            if os.name == "nt"
+            else ("support/analyzeHeadless",)
+        )
+        candidates = [home / name for name in launcher_names]
+    else:
+        commands = (
+            ("analyzeHeadless.bat", "analyzeHeadless")
+            if os.name == "nt"
+            else ("analyzeHeadless",)
+        )
+        for command in commands:
+            found = shutil.which(command)
+            if found:
+                candidates = [Path(found).resolve()]
+                break
+        else:
+            candidates = []
+
+    for candidate in candidates:
+        if candidate.is_file():
+            if os.name != "nt" and not os.access(candidate, os.X_OK):
+                raise PermissionError(
+                    f"Ghidra headless analyzer is not executable: {candidate}. "
+                    f"Run 'chmod +x {candidate}' and try again."
+                )
+            return candidate
+
+    if explicit_path is not None:
+        raise FileNotFoundError(f"Headless analyzer not found: {candidates[0]}")
+    if ghidra_home is not None:
         raise FileNotFoundError(
             f"Could not find support/analyzeHeadless under Ghidra home: {home}"
         )
-
-    for command in ("analyzeHeadless.bat", "analyzeHeadless"):
-        found = shutil.which(command)
-        if found:
-            return Path(found).resolve()
 
     raise FileNotFoundError(
         "Ghidra headless analyzer was not found. Set GHIDRA_HOME, add "

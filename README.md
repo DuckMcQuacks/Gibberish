@@ -4,11 +4,16 @@ This utility imports Windows `.exe` files into Ghidra, runs Ghidra's normal anal
 
 ## Requirements
 
-- Ghidra installed, including its `support/analyzeHeadless` script.
+- Ghidra installed, including its `support/analyzeHeadless` launcher (or
+  `support/analyzeHeadless.bat` on Windows). On Linux and macOS, the launcher
+  must be executable.
 - Java version supported by your installed Ghidra release.
 - Python 3.10 or later.
 
-The script's `GHIDRA_HOME` variable is set to `C:\Users\theda\Downloads\ghidra_12.1.4_PUBLIC`. Change that variable in `disassemble.py` if Ghidra is installed elsewhere. You can also override it with the `GHIDRA_HOME` environment variable or pass the analyzer path explicitly with `--analyze-headless`.
+The script's `GHIDRA_HOME` variable provides the default Ghidra installation
+directory. Change that variable in `disassemble.py` if Ghidra is installed
+elsewhere. You can also override it with the `GHIDRA_HOME` environment
+variable or pass the analyzer path explicitly with `--analyze-headless`.
 
 ## Usage
 
